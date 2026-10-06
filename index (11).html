@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ป่าสวนบ่าวค๊อป — ดาวน์โหลด APK</title>
+<meta name="description" content="เกม RPG และฟาร์มสไตล์พิกเซล เล่นออฟไลน์บน Android">
+<link rel="icon" href="assets/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;600&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#14151a; --panel:#1f2130; --panel-2:#2a2d42;
+  --grass:#5cbf3f; --grass-dk:#2f7a24;
+  --gold:#f5c518; --gold-dk:#b88a00;
+  --barn:#c0392b; --wood:#7a4a21; --cream:#f3ecd8; --mute:#a9a79a;
+  --px:4px;
+}
+*{box-sizing:border-box}
+html{background:var(--night)}
+body{
+  margin:0; min-height:100vh; color:var(--cream);
+  font-family:"Mitr","Noto Sans Thai",system-ui,sans-serif; font-weight:400; line-height:1.65;
+  background:
+    linear-gradient(var(--night) 0 0) top/100% 220px no-repeat,
+    repeating-linear-gradient(90deg,#17181f 0 8px,#14151a 8px 16px);
+  padding:24px 16px 48px;
+}
+main{max-width:520px;margin:0 auto}
+
+/* กรอบพิกเซล */
+.px{
+  background:var(--panel);
+  box-shadow:
+    0 calc(var(--px)*-1) 0 0 #000, 0 var(--px) 0 0 #000,
+    calc(var(--px)*-1) 0 0 0 #000, var(--px) 0 0 0 #000,
+    0 calc(var(--px)*2) 0 0 var(--wood), 0 calc(var(--px)*3) 0 0 #000;
+}
+.hero{margin:8px 0 28px;padding:10px}
+.hero img{display:block;width:100%;height:auto;image-rendering:pixelated}
+h1{
+  font-weight:600; font-size:clamp(34px,10vw,48px); line-height:1.15; margin:0 0 6px;
+  color:var(--gold); letter-spacing:.5px;
+  text-shadow:var(--px) var(--px) 0 #000, calc(var(--px)*-1) 0 0 #000, 0 calc(var(--px)*-1) 0 #000;
+}
+.tag{font-family:"Silkscreen",monospace;font-size:13px;color:var(--grass);margin:0 0 14px}
+.lead{margin:0 0 24px;color:var(--cream);font-size:17px;max-width:44ch}
+
+/* ปุ่มกดสไตล์พิกเซล */
+.dl{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  width:100%;padding:18px 20px;margin:0 0 10px;
+  font:600 22px/1.2 "Mitr",sans-serif; color:#1a1300; text-decoration:none;
+  background:var(--gold); border:none; cursor:pointer;
+  box-shadow:
+    0 calc(var(--px)*-1) 0 0 #000, 0 var(--px) 0 0 #000,
+    calc(var(--px)*-1) 0 0 0 #000, var(--px) 0 0 0 #000,
+    inset 0 calc(var(--px)*-2) 0 0 #ffe27a, inset 0 calc(var(--px)*2) 0 0 var(--gold-dk),
+    0 calc(var(--px)*2) 0 0 #000, 0 calc(var(--px)*3) 0 0 var(--barn);
+  transition:transform .08s;
+}
+.dl:hover{background:#ffd84a}
+.dl:active{transform:translateY(var(--px))}
+.dl:focus-visible{outline:3px solid var(--cream);outline-offset:6px}
+.dl[disabled]{opacity:0.6;cursor:not-allowed}
+.dl svg{width:24px;height:24px;shape-rendering:crispEdges;flex:none}
+
+/* แถบ Progress Bar สไตล์ 8-bit */
+.progress-wrap{
+  display:none;
+  margin:16px 0 20px;
+  padding:14px;
+  background:var(--panel-2);
+  box-shadow:0 0 0 var(--px) #000;
+}
+.progress-meta{
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:"Silkscreen",monospace; font-size:13px; margin-bottom:8px;
+  color:var(--cream);
+}
+.progress-track{
+  width:100%; height:16px;
+  background:#14151a;
+  box-shadow:inset 0 0 0 2px #000;
+  padding:2px;
+}
+.progress-fill{
+  width:0%; height:100%;
+  background:var(--grass);
+  box-shadow:inset 0 -3px 0 var(--grass-dk), inset 0 3px 0 #8df274;
+  transition:width 0.1s linear;
+}
+
+.meta{font-family:"Silkscreen",monospace;font-size:12px;color:var(--mute);text-align:center;margin:18px 0 36px}
+h2{font-weight:600;font-size:22px;margin:0 0 14px;color:var(--grass)}
+.steps{list-style:none;counter-reset:s;margin:0 0 32px;padding:0;display:grid;gap:14px}
+.steps li{counter-increment:s;position:relative;padding:14px 14px 14px 62px;background:var(--panel-2);
+  box-shadow:0 0 0 var(--px) #000}
+.steps li::before{
+  content:counter(s); position:absolute;left:12px;top:12px;width:36px;height:36px;
+  display:grid;place-items:center;font:700 18px "Silkscreen",monospace;color:#fff;
+  background:var(--grass-dk);box-shadow:0 0 0 3px #000, inset 0 -4px 0 #1d5016;
+}
+.steps b{font-weight:600;color:var(--gold)}
+.note{padding:16px;margin:0 0 32px;font-size:15px}
+.note p{margin:0 0 8px}.note p:last-child{margin:0}
+.note strong{color:var(--grass);font-weight:600}
+footer{text-align:center;color:var(--mute);font-size:13px}
+@media (prefers-reduced-motion:reduce){.dl{transition:none}}
+</style>
+</head>
+<body>
+<main>
+  <div class="px hero">
+    <img src="assets/cover.png" width="640" height="640" alt="ภาพปกเกม ป่าสวนบ่าวค๊อป: ชาวสวนถือจอบและดาบอยู่กลางฟาร์ม มีไก่ แกะ และมอนสเตอร์รายล้อม">
+  </div>
+
+  <h1>ป่าสวนบ่าวค๊อป</h1>
+  <p class="tag">PIXEL VALE TH</p>
+  <p class="lead">เกม RPG และฟาร์มสไตล์พิกเซล ปลูกผัก เลี้ยงสัตว์ แล้วถือดาบออกไปสู้กับมอนสเตอร์ เล่นออฟไลน์ได้ทั้งเกม</p>
+
+  <!-- ปุ่มดาวน์โหลด -->
+  <button id="dlBtn" class="dl" type="button">
+    <svg viewBox="0 0 12 12" aria-hidden="true"><path fill="#1a1300" d="M5 1h2v5h2v1H8v1H7v1H5V8H4V7H3V6h2z M2 10h8v1H2z"/></svg>
+    <span id="btnText">ดาวน์โหลด APK</span>
+  </button>
+
+  <!-- กล่องแสดงแถบดาวน์โหลด -->
+  <div id="progressBox" class="progress-wrap">
+    <div class="progress-meta">
+      <span id="statusText">CONNECTING...</span>
+      <span id="percentText">0%</span>
+    </div>
+    <div class="progress-track">
+      <div id="progressBar" class="progress-fill"></div>
+    </div>
+  </div>
+
+  <p class="meta">ANDROID · ไฟล์ .APK · ติดตั้งเองนอก PLAY STORE</p>
+
+  <h2>วิธีติดตั้ง</h2>
+  <ol class="steps">
+    <li><b>กดดาวน์โหลด</b> ไฟล์ <code>pixel-vale-th-copter.apk</code> จะถูกบันทึกลงเครื่อง</li>
+    <li><b>เปิดไฟล์</b> จากแจ้งเตือนหรือแอปจัดการไฟล์ในโฟลเดอร์ดาวน์โหลด</li>
+    <li><b>อนุญาตการติดตั้ง</b> ถ้าเครื่องถาม ให้เปิด “ติดตั้งแอปจากแหล่งที่ไม่รู้จัก” สำหรับเบราว์เซอร์หรือแอปไฟล์ที่ใช้</li>
+    <li><b>กดติดตั้ง</b> แล้วเปิดเกมจากไอคอนบนหน้าจอ เกมจะเล่นแนวนอนเต็มจอ</li>
+  </ol>
+
+  <div class="px note">
+    <p><strong>อัปเดตเกม:</strong> ติดตั้งไฟล์ใหม่ทับของเดิมได้เลย เซฟเกมไม่หาย</p>
+    <p><strong>ความปลอดภัย:</strong> ดาวน์โหลดจากหน้านี้เท่านั้น เครื่องอาจเตือนว่าไฟล์มาจากแหล่งที่ไม่รู้จัก ซึ่งเป็นเรื่องปกติของแอปที่แจกเอง</p>
+  </div>
+
+  <footer>ป่าสวนบ่าวค๊อป · Pixel Vale TH</footer>
+</main>
+
+<script>
+  const fileUrl = "pixel-vale-th-copter.apk";
+  const dlBtn = document.getElementById("dlBtn");
+  const btnText = document.getElementById("btnText");
+  const progressBox = document.getElementById("progressBox");
+  const progressBar = document.getElementById("progressBar");
+  const percentText = document.getElementById("percentText");
+  const statusText = document.getElementById("statusText");
+
+  dlBtn.addEventListener("click", () => {
+    dlBtn.disabled = true;
+    btnText.textContent = "กำลังเตรียมดาวน์โหลด...";
+    progressBox.style.display = "block";
+    progressBar.style.width = "0%";
+    percentText.textContent = "0%";
+    statusText.textContent = "CONNECTING...";
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", fileUrl, true);
+    xhr.responseType = "blob";
+
+    // ติดตามไบต์จริงที่ดาวน์โหลดจากเซิร์ฟเวอร์
+    xhr.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percent = Math.min(100, Math.round((event.loaded / event.total) * 100));
+        progressBar.style.width = percent + "%";
+        percentText.textContent = percent + "%";
+
+        const loadedMB = (event.loaded / (1024 * 1024)).toFixed(1);
+        const totalMB = (event.total / (1024 * 1024)).toFixed(1);
+        statusText.textContent = `${loadedMB}MB / ${totalMB}MB`;
+      } else {
+        const loadedMB = (event.loaded / (1024 * 1024)).toFixed(1);
+        statusText.textContent = `${loadedMB}MB (DOWNLOADING...)`;
+      }
+    };
+
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        progressBar.style.width = "100%";
+        percentText.textContent = "100%";
+        statusText.textContent = "COMPLETED!";
+        btnText.textContent = "บันทึกไฟล์แล้ว";
+
+        // แปลงไฟล์เป็น Blob Object และสั่งเบราว์เซอร์ให้ดาวน์โหลดลงเครื่องทันที
+        const blob = xhr.response;
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = "pixel-vale-th-copter.apk";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(downloadUrl);
+
+        setTimeout(() => {
+          dlBtn.disabled = false;
+          btnText.textContent = "ดาวน์โหลด APK อีกครั้ง";
+        }, 3000);
+      } else {
+        statusText.textContent = "ERROR 404";
+        btnText.textContent = "ไม่พบไฟล์ APK";
+        dlBtn.disabled = false;
+      }
+    };
+
+    xhr.onerror = () => {
+      statusText.textContent = "CONNECTION FAILED";
+      btnText.textContent = "เครือข่ายขัดข้อง";
+      dlBtn.disabled = false;
+    };
+
+    xhr.send();
+  });
+</script>
+</body>
+</html>
